@@ -1,8 +1,8 @@
 package com.edutech.progressive.entity;
 
-import java.sql.Date;
+import java.util.Date;
 
-public class Student {
+public class Student implements Comparable<Student> {
     private int studentId;
     private String fullName;
     private Date dateOfBirth;
@@ -11,6 +11,7 @@ public class Student {
     private String address;
 
     public Student() {}
+
 
     public Student(int studentId, String fullName, Date dateOfBirth, String contactNumber, String email, String address) {
         this.studentId = studentId;
@@ -67,6 +68,13 @@ public class Student {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+
+    @Override
+    public int compareTo(Student otherStudent) {
+        // Compares two Student objects based on their fullName in lexicographical order
+        return this.fullName.compareToIgnoreCase(otherStudent.fullName);
     }
 
    
