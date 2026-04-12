@@ -1,4 +1,4 @@
-package com.edutech.progressive.config;
+ckage com.edutech.progressive.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
