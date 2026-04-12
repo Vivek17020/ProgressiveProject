@@ -1,9 +1,7 @@
 package com.edutech.progressive.entity;
 
 public class Course {
-<<<<<<< HEAD
 
-=======
     private int courseId;
     private String courseName;
     private String description;
@@ -28,5 +26,5 @@ public class Course {
     public void setDescription(String description) { this.description = description; }
     public int getTeacherId() { return teacherId; }
     public void setTeacherId(int teacherId) { this.teacherId = teacherId; }
->>>>>>> a620306e1a8595f58f09e291e62fe35606b4afd0
+
 }
