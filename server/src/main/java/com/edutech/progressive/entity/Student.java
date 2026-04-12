@@ -1,9 +1,6 @@
 package com.edutech.progressive.entity;
 
-<<<<<<< HEAD
-public class Student {
 
-=======
 import java.util.Date;
 
 public class Student implements Comparable<Student> {
@@ -81,6 +78,5 @@ public class Student implements Comparable<Student> {
         return this.fullName.compareToIgnoreCase(otherStudent.fullName);
     }
 
-   
->>>>>>> a620306e1a8595f58f09e291e62fe35606b4afd0
+
 }

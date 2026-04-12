@@ -1,8 +1,6 @@
-<<<<<<< HEAD
-ckage com.edutech.progressive.config;
-=======
+
+
 package com.edutech.progressive.config;
->>>>>>> a620306e1a8595f58f09e291e62fe35606b4afd0
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

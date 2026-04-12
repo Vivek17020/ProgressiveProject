@@ -1,9 +1,6 @@
 package com.edutech.progressive.service.impl;
 
-<<<<<<< HEAD
-public class StudentServiceImplArraylist  {
 
-=======
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,5 +34,5 @@ public class StudentServiceImplArraylist {
     // Clears all students by reinitializing the list
     public void emptyArrayList() {
     }
->>>>>>> a620306e1a8595f58f09e291e62fe35606b4afd0
+
 }
