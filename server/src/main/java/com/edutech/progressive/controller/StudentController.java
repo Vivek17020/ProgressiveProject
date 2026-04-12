@@ -2,39 +2,50 @@ package com.edutech.progressive.controller;
 
 import com.edutech.progressive.entity.Student;
 import org.springframework.http.ResponseEntity;
-
 import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
+@RestController
+@RequestMapping("/student")
 public class StudentController {
 
+    @GetMapping
     public ResponseEntity<List<Student>> getAllStudents() {
         return null;
     }
 
-    public ResponseEntity<Student> getStudentById(int studentId) {
+    @GetMapping("/{studentId}")
+    public ResponseEntity<Student> getStudentById(@PathVariable int studentId) {
         return null;
     }
 
-    public ResponseEntity<Integer> addStudent(Student student) {
+    @PostMapping
+    public ResponseEntity<Integer> addStudent(@RequestBody Student student) {
         return null;
     }
 
-    public ResponseEntity<Void> updateStudent(int studentId, Student student) {
+    @PutMapping("/{studentId}")
+    public ResponseEntity<Void> updateStudent(@PathVariable int studentId,
+                                              @RequestBody Student student) {
         return null;
     }
 
-    public ResponseEntity<Void> deleteStudent(int studentId) {
+    @DeleteMapping("/{studentId}")
+    public ResponseEntity<Void> deleteStudent(@PathVariable int studentId) {
         return null;
     }
 
+    @GetMapping("/fromArrayList")
     public ResponseEntity<List<Student>> getAllStudentFromArrayList() {
         return null;
     }
 
-    public ResponseEntity<Integer> addStudentToArrayList(Student student) {
+    @PostMapping("/toArrayList")
+    public ResponseEntity<Void> addStudentToArrayList() {
         return null;
     }
 
+    @GetMapping("/fromArrayList/sorted")
     public ResponseEntity<List<Student>> getAllStudentSortedByNameFromArrayList() {
         return null;
     }

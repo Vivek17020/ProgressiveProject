@@ -2,31 +2,47 @@ package com.edutech.progressive.controller;
 
 import com.edutech.progressive.entity.Course;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@RestController
+@RequestMapping("/course")
 public class CourseController {
-    public ResponseEntity<List<Course>> getAllCourses() {
+
+    @GetMapping
+    public List<Course> getAllCourses() {
         return null;
     }
 
-    public ResponseEntity<Course> getCourseById(int courseId) {
+    @GetMapping("/{courseId}")
+    public Course getCourseById(@PathVariable int courseId) {
         return null;
     }
 
-    public ResponseEntity<Integer> addCourse(Course course) {
-        return null;
+    @PostMapping
+    public int addCourse(@RequestBody Course course) {
+        return -1;
     }
 
-    public ResponseEntity<Void> updateCourse(int courseId, Course course) {
-        return null;
+    @PutMapping("/{courseId}")
+    public void updateCourse(@PathVariable int courseId,
+                             @RequestBody Course course) {
     }
 
-    public ResponseEntity<Void> deleteCourse(int courseId) {
-        return null;
+    @DeleteMapping("/{courseId}")
+    public void deleteCourse(@PathVariable int courseId) {
     }
 
-    public ResponseEntity<List<Course>> getAllCourseByTeacherId(int teacherId) {
+    @GetMapping("/teacher/{teacherId}")
+    public List<Course> getAllCourseByTeacherId(@PathVariable int teacherId) {
         return null;
     }
 }
