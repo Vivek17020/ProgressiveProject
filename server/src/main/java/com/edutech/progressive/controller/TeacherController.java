@@ -23,27 +23,27 @@ public class TeacherController {
 
     // GET /teacher
     @GetMapping
-    public List<Teacher> getAllTeachers() {
+    public List<Teacher> getAllTeachers() throws Exception {
         return teacherServiceImplJpa.getAllTeachers();
     }
 
     // GET /teacher/{teacherId}
     @GetMapping("/{teacherId}")
-    public Teacher getTeacherById(@PathVariable int teacherId) {
+    public Teacher getTeacherById(@PathVariable int teacherId) throws Exception {
         return teacherServiceImplJpa.getTeacherById(teacherId);
     }
 
     // POST /teacher
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Integer addTeacher(@RequestBody Teacher teacher) {
+    public Integer addTeacher(@RequestBody Teacher teacher) throws Exception {
         return teacherServiceImplJpa.addTeacher(teacher);
     }
 
     // PUT /teacher/{teacherId}
     @PutMapping("/{teacherId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateTeacher(@PathVariable int teacherId, @RequestBody Teacher teacher) {
+    public void updateTeacher(@PathVariable int teacherId, @RequestBody Teacher teacher) throws Exception {
         teacher.setTeacherId(teacherId);
         teacherServiceImplJpa.updateTeacher(teacher);
     }
@@ -51,13 +51,13 @@ public class TeacherController {
     // DELETE /teacher/{teacherId}
     @DeleteMapping("/{teacherId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteTeacher(@PathVariable int teacherId) {
+    public void deleteTeacher(@PathVariable int teacherId) throws Exception {
         teacherServiceImplJpa.deleteTeacher(teacherId);
     }
 
     // GET /teacher/yearsofexperience
     @GetMapping("/yearsofexperience")
-    public List<Teacher> getTeacherSortedByYearsOfExperience() {
+    public List<Teacher> getTeacherSortedByYearsOfExperience() throws Exception {
         return teacherServiceImplJpa.getTeacherSortedByExperience();
     }
 }
