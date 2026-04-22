@@ -17,4 +17,5 @@ public interface StudentService {
     default Student getStudentById(int studentId) throws Exception { return null; }
 
     default void emptyArrayList() {}
+     default public void modifyStudentDetails(StudentDTO studentDTO) { }
 }
