@@ -2,9 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthModule } from '../auth/auth.module';
 import { RouterModule } from '@angular/router';
+import { NavBarComponent } from './navbar/navbar.component';
+import { LogoutComponent } from '../auth/components/logout/logout.component';
 
 @NgModule({
   declarations: [
+    NavBarComponent,
+    LogoutComponent
   ],
   imports: [
     CommonModule,
@@ -12,6 +16,7 @@ import { RouterModule } from '@angular/router';
     RouterModule
   ],
   exports: [
+    NavBarComponent
   ]
 })
 export class SharedModule {}

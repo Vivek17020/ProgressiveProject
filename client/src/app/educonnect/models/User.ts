@@ -1,24 +1,20 @@
-export class User {
-  userId: number;
-  username: string;
-  password: string;
-  role: string;
-  studentId?: number;
-  teacherId?: number;
+import { Student } from "./Student";
+import { Teacher } from "./Teacher";
 
-  constructor(
-    userId: number,
-    username: string,
-    password: string,
-    role: string,
-    studentId?: number,
-    teacherId?: number
-  ) {
-    this.userId = userId;
-    this.username = username;
-    this.password = password;
-    this.role = role;
-    this.studentId = studentId;
-    this.teacherId = teacherId;
+export class User {
+    userId: number;
+    username: string;
+    password: string;
+    role: string;
+    student?: Student | undefined;
+    teacher?: Teacher | undefined;
+  
+    constructor(userId: number, username: string, password: string, role: string, student: Student | undefined, teacher: Teacher | undefined) {
+      this.userId = userId;
+      this.username = username;
+      this.password = password;
+      this.role = role;
+      this.student = student;
+      this.teacher = teacher;
+    }
   }
-}
