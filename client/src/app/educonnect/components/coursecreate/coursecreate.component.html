@@ -1,22 +1,76 @@
-<h2>Create Course</h2>
-<form [formGroup]="courseForm" (ngSubmit)="onSubmit()">
-    <label>Course Name</label>
-    <input formControlName="courseName" />
-    <div *ngIf="submitted && f['courseName'].errors">Course name required</div>
-    <label>Description</label>
-    <textarea formControlName="description"></textarea>
-    <div *ngIf="submitted && f['description'].errors">
-        <span *ngIf="f['description'].errors['required']">Description required</span>
-        <span *ngIf="f['description'].errors['maxlength']">Max 500 characters</span>
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light py-5">
+  <div class="row w-100 justify-content-center">
+    <div class="col-xl-6 col-lg-7 col-md-9">
+      <div class="card shadow-lg border-0">
+        <div class="card-body p-5">
+          <div class="d-flex align-items-start mb-4">
+            <div class="me-3 text-primary display-4">
+              <i class="bi bi-journal-plus"></i>
+            </div>
+            <div>
+              <h2 class="h3 fw-bold mb-1">Create New Course</h2>
+              <p class="text-muted mb-0">Publish a course quickly and assign it to your teacher profile.</p>
+            </div>
+          </div>
+
+          <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>{{ successMessage }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+          <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+
+          <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" novalidate>
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Course Name</label>
+              <input type="text" class="form-control form-control-lg" formControlName="courseName" placeholder="Enter course title" />
+              <div class="invalid-feedback d-block" *ngIf="submitted && f['courseName'].errors">
+                Course name is required.
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Description</label>
+              <textarea class="form-control form-control-lg" formControlName="description" rows="5" placeholder="Describe the course content"></textarea>
+              <div class="invalid-feedback d-block" *ngIf="submitted && f['description'].errors">
+                <span *ngIf="f['description'].errors['required']">Description is required.</span>
+                <span *ngIf="f['description'].errors['maxlength']">Maximum 500 characters allowed.</span>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Teacher ID</label>
+              <input type="text" class="form-control form-control-lg" formControlName="teacherId" readonly />
+              <div class="invalid-feedback d-block" *ngIf="submitted && f['teacherId'].errors">
+                <span *ngIf="f['teacherId'].errors['required']">Teacher ID is required.</span>
+                <span *ngIf="f['teacherId'].errors['pattern']">Teacher ID must be numeric.</span>
+              </div>
+            </div>
+
+            <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
+              <button type="submit" class="btn btn-primary btn-lg flex-fill">Create Course</button>
+              <button type="button" class="btn btn-outline-secondary btn-lg flex-fill" (click)="resetForm()">Reset</button>
+            </div>
+          </form>
+
+          <div *ngIf="createdCourse" class="card border-primary mt-4">
+            <div class="card-body">
+              <h5 class="card-title text-primary">Created Course Summary</h5>
+              <p class="card-text mb-2"><strong>Course Name:</strong> {{ createdCourse.courseName }}</p>
+              <p class="card-text mb-2"><strong>Description:</strong> {{ createdCourse.description }}</p>
+              <p class="card-text mb-0"><strong>Teacher ID:</strong> {{ createdCourse.teacherId }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer bg-light text-center py-3">
+          <small class="text-muted">
+            <i class="bi bi-lightbulb-fill me-1"></i>Course details are saved instantly to EduConnect.
+          </small>
+        </div>
+      </div>
     </div>
-    <label>Teacher ID</label>
-    <input formControlName="teacherId" />
-    <div *ngIf="submitted && f['teacherId'].errors">
-        <span *ngIf="f['teacherId'].errors['required']">Teacher ID required</span>
-        <span *ngIf="f['teacherId'].errors['pattern']">Must be numeric</span>
-    </div>
-    <button type="submit" (ngSubmit) = "onSubmit()">Submit</button>
-    <button type="button" (click)="resetForm()">Reset</button>
-</form>
-<div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
-<div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+  </div>
+</div>

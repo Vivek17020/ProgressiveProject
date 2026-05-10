@@ -1,0 +1,38 @@
+.min-vh-100 {
+  min-height: 100vh;
+}
+
+.card {
+  border-radius: 1rem;
+  box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.12);
+}
+
+.card-body {
+  padding: 3rem !important;
+}
+
+.form-control {
+  border-radius: 0.75rem;
+  border: 1px solid #e9ecef;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-primary,
+.btn-outline-secondary {
+  border-radius: 0.75rem;
+}
+
+.alert {
+  border-radius: 0.75rem;
+}
+
+@media (max-width: 576px) {
+  .card-body {
+    padding: 2rem !important;
+  }
+}

@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Student } from '../../models/Student';
 
@@ -46,7 +46,9 @@ export class StudentEditComponent implements OnInit {
 
         private educonnectService: EduConnectService,
 
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+
+        private router: Router
 
     ) { }
  
@@ -204,6 +206,12 @@ export class StudentEditComponent implements OnInit {
         }
 
         this.successMessage = null;
+
+    }
+
+    goBack(): void {
+
+        this.router.navigate(['/dashboard']);
 
     }
 

@@ -1,0 +1,88 @@
+.min-vh-100 {
+  min-height: 100vh;
+}
+
+.card {
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+  }
+}
+
+.card-body {
+  padding: 3rem !important;
+}
+
+.form-control {
+  border-radius: 0.5rem;
+  border: 2px solid #e9ecef;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+  &:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+  }
+
+  &.is-valid {
+    border-color: #198754;
+  }
+
+  &.is-invalid {
+    border-color: #dc3545;
+  }
+}
+
+.btn {
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.15s ease-in-out;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+  border: none;
+
+  &:hover {
+    background: linear-gradient(135deg, #0b5ed7 0%, #0a58ca 100%);
+  }
+
+  &:disabled {
+    background: #6c757d;
+    opacity: 0.65;
+  }
+}
+
+.alert {
+  border-radius: 0.5rem;
+  border: none;
+}
+
+.input-group .btn {
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.display-4 {
+  font-size: 3rem;
+}
+
+@media (max-width: 576px) {
+  .card-body {
+    padding: 2rem 1.5rem !important;
+  }
+
+  .display-4 {
+    font-size: 2.5rem;
+  }
+}

@@ -13,7 +13,9 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   loginError$: Observable<{ [key: string]: string; }> | undefined;
   successMessage: string | null = null;
-   errorMessage: string | null = null;
+  errorMessage: string | null = null;
+  showPassword: boolean = false;
+  isLoading: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -35,27 +37,33 @@ export class LoginComponent implements OnInit {
       });
       return;
     } else {
+      this.isLoading = true;
+      this.successMessage = null;
+      this.errorMessage = null;
+
       const { username, password } = this.loginForm.value;
       this.loginError$ = this.authService
         .login({ username, password })
         .pipe(
           tap((response) => {
             console.log(response);
-            
+
             localStorage.setItem("token", response['token']);
             localStorage.setItem("role", response['role']);
             localStorage.setItem("userId", response['userId']);
-            
+
             if (response['studentId']) {
               localStorage.setItem("studentId", response['studentId']);
             }
             if (response['teacherId']) {
               localStorage.setItem("teacherId", response['teacherId']);
             }
-            
+
             console.log(localStorage.getItem("role"));
-            
-        
+
+            this.successMessage = "Login successful! Redirecting...";
+            this.isLoading = false;
+
             const role = this.authService.getRole();
             if (role === 'TEACHER' || role === 'STUDENT') {
               this.router.navigate(['/educonnect']);
@@ -65,9 +73,15 @@ export class LoginComponent implements OnInit {
           }),
           catchError((error) => {
             console.error("Login error:", error);
+            this.errorMessage = "Invalid username or password";
+            this.isLoading = false;
             return of({ message: "Invalid username or password" });
           })
         );
     }
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 }

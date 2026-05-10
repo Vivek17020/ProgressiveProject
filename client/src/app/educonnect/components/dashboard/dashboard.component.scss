@@ -1,17 +1,55 @@
-.dashboard {
-  padding: 1rem
-  h3 {
-    margin-top: 2rem;
-    color: #1976d2;
+// Custom styles for EduConnect Dashboard
+// Using Bootstrap classes for main styling
+
+// Custom card hover effects
+.card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+}
+
+// Custom table styling
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+// Loading spinner customization
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+// Empty state icons
+.display-1 {
+  font-size: 4rem;
+  opacity: 0.5;
+}
+
+// Button hover effects
+.btn-outline-primary:hover,
+.btn-outline-success:hover,
+.btn-outline-danger:hover,
+.btn-outline-warning:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
-  button {
-    margin-right: 1rem;
-    margin-top: .5rem;
+  .card-body {
+    padding: 1rem;
   }
-  ul {
-    list-style: none;
-    padding: 0;
-    li { margin: .5rem 0; }
+
+  .btn-group-sm .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
   }
 }

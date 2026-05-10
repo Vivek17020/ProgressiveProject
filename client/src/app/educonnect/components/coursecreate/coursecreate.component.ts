@@ -12,6 +12,7 @@ export class CourseCreateComponent implements OnInit {
   submitted = false;
   successMessage = '';
   errorMessage = '';
+  createdCourse: any = null;
 
   constructor(private fb: FormBuilder, private eduService: EduConnectService) {
     this.courseForm = this.fb.group({
@@ -24,7 +25,7 @@ export class CourseCreateComponent implements OnInit {
 
   ngOnInit(): void {
    
-    const teacherId = Number(localStorage.getItem('teacher_id')) || 0;
+    const teacherId = Number(localStorage.getItem('teacherId')) || 0;
 
     this.eduService.getTeacherById(teacherId).subscribe({
       next: (teacher) => {
@@ -54,13 +55,12 @@ export class CourseCreateComponent implements OnInit {
 
 
     this.eduService.addCourse(this.courseForm.value).subscribe({
-      next: () => {
+      next: (response) => {
+        this.createdCourse = response || this.courseForm.value;
         this.successMessage = 'Course created successfully!';
-      
-        setTimeout(() => {
-          this.courseForm.reset({ courseId: 0, courseName: '', description: '', teacherId: 0 });
-          this.submitted = false;
-        }, 0);
+        this.errorMessage = '';
+        this.courseForm.reset({ courseId: 0, courseName: '', description: '', teacherId: 0 });
+        this.submitted = false;
       },
       error: () => {
         this.errorMessage = 'Failed to create course.';
@@ -73,5 +73,6 @@ export class CourseCreateComponent implements OnInit {
     this.submitted = false;
     this.successMessage = '';
     this.errorMessage = '';
+    this.createdCourse = null;
   }
 } 
