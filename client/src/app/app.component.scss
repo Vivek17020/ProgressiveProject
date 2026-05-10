@@ -19,3 +19,8 @@ body {
 .form-label {
   font-weight: 600;
 }
+
+:host {
+  display: block;
+}
+

@@ -1,5 +1,4 @@
 package com.edutech.progressive.controller;
-
 import com.edutech.progressive.entity.Attendance;
 import com.edutech.progressive.service.impl.AttendanceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,61 +13,55 @@ import java.util.List;
 public class AttendanceController {
 
     @Autowired
-    private AttendanceServiceImpl attendanceServiceImpl;
+    AttendanceServiceImpl attendanceService;
 
-    // GET /attendance
     @GetMapping
     public ResponseEntity<List<Attendance>> getAllAttendance() {
         try {
-            return ResponseEntity.ok(attendanceServiceImpl.getAllAttendance());
+            List<Attendance> attendanceList = attendanceService.getAllAttendance();
+            return new ResponseEntity<>(attendanceList, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    // POST /attendance
     @PostMapping
     public ResponseEntity<Attendance> createAttendance(@RequestBody Attendance attendance) {
         try {
-            Attendance saved = attendanceServiceImpl.createAttendance(attendance);
-            return new ResponseEntity<>(saved, HttpStatus.CREATED);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            Attendance attendanceSaved = attendanceService.createAttendance(attendance);
+            return new ResponseEntity<>(attendanceSaved, HttpStatus.CREATED);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    // DELETE /attendance/{attendanceId}
     @DeleteMapping("/{attendanceId}")
-    public ResponseEntity<Void> deleteAttendance(@PathVariable int attendanceId) {
+    public ResponseEntity<Integer> deleteAttendance(@PathVariable int attendanceId) {
         try {
-            attendanceServiceImpl.deleteAttendance(attendanceId);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            attendanceService.deleteAttendance(attendanceId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    // GET /attendance/student/{studentId}
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<Attendance>> getAttendanceByStudent(@PathVariable int studentId) {
+    public ResponseEntity<List<Attendance>> getAllAttendanceByStudent(@PathVariable int studentId) {
         try {
-            return ResponseEntity.ok(attendanceServiceImpl.getAttendanceByStudent(studentId));
+            List<Attendance> attendanceList = attendanceService.getAttendanceByStudent(studentId);
+            return new ResponseEntity<>(attendanceList, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    // GET /attendance/course/{courseId}
     @GetMapping("/course/{courseId}")
-    public ResponseEntity<List<Attendance>> getAttendanceByCourse(@PathVariable int courseId) {
+    public ResponseEntity<List<Attendance>> getAllAttendanceByCourse(@PathVariable int courseId) {
         try {
-            return ResponseEntity.ok(attendanceServiceImpl.getAttendanceByCourse(courseId));
+            List<Attendance> attendanceList = attendanceService.getAttendanceByCourse(courseId);
+            return new ResponseEntity<>(attendanceList, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

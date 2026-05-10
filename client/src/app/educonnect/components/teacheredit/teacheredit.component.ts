@@ -13,7 +13,7 @@ import { TeacherDTO } from '../../models/TeacherDTO';
 import { User } from '../../models/User';
 
 import { EduConnectService } from '../../services/educonnect.service';
-
+ 
 @Component({
 
     selector: 'app-teacheredit',
@@ -32,15 +32,15 @@ export class TeacherEditComponent implements OnInit {
 
     errorMessage: string | null = null;
 
-    teacherId: number = 0;
+    teacherId: number=0;
 
-    userId: number = 0;
+    userId: number=0;
 
     teacher: Teacher | undefined;
 
     user: User | undefined;
-
-
+ 
+ 
     constructor(
 
         private formBuilder: FormBuilder,
@@ -50,13 +50,13 @@ export class TeacherEditComponent implements OnInit {
         private route: ActivatedRoute
 
     ) { }
-
+ 
     ngOnInit(): void {
 
         this.initializeForm();
 
     }
-
+ 
     initializeForm(): void {
 
         this.userId = Number(localStorage.getItem("user_id"));
@@ -84,7 +84,7 @@ export class TeacherEditComponent implements OnInit {
         this.loadTeacherDetails();
 
     }
-
+ 
     loadTeacherDetails(): void {
 
         this.educonnectService.getTeacherById(this.teacherId).subscribe({
@@ -134,7 +134,7 @@ export class TeacherEditComponent implements OnInit {
         });
 
     }
-
+ 
     onSubmit(): void {
 
         if (this.teacherForm.valid) {
@@ -182,7 +182,7 @@ export class TeacherEditComponent implements OnInit {
         }
 
     }
-
+ 
     private handleError(error: HttpErrorResponse): void {
 
         if (error.error instanceof ErrorEvent) {
@@ -198,6 +198,7 @@ export class TeacherEditComponent implements OnInit {
         this.successMessage = null;
 
     }
-
+ 
 }
-
+ 
+ 

@@ -29,10 +29,10 @@ export class DashboardComponent implements OnInit {
   constructor(private educonnectService: EduConnectService, private router: Router) { }
 
   ngOnInit(): void {
-    this.role = localStorage.getItem("role") || 'TEACHER'; // Default to TEACHER for testing
-    this.userId = Number(localStorage.getItem("userId")) || 1;
-    this.teacherId = Number(localStorage.getItem("teacherId")) || 1;
-    this.studentId = Number(localStorage.getItem("studentId")) || 1;
+    this.role = localStorage.getItem("role");
+    this.userId = Number(localStorage.getItem("user_id"));
+    this.teacherId = Number(localStorage.getItem("teacher_id"));
+    this.studentId = Number(localStorage.getItem("student_id"));
     if (this.role === 'TEACHER') {
       console.log('loadTeacherData');
       this.loadTeacherData();

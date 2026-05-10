@@ -13,7 +13,7 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: '/educonnect',  // Redirect to 'educonnect' route by default
+    redirectTo: '/auth',  // Redirect to 'auth' route by default
   }
 ];
 
@@ -21,5 +21,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
-
+export class AppRoutingModule { }

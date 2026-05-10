@@ -7,16 +7,20 @@ import com.edutech.progressive.entity.User;
 import com.edutech.progressive.jwt.JwtUtil;
 import com.edutech.progressive.service.impl.UserLoginServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
-import org.springframework.security.authentication.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/auth")
 public class UserLoginController {
 
     @Autowired
-    private UserLoginServiceImpl userLoginServiceImpl;
+    private UserLoginServiceImpl userLoginService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -25,12 +29,12 @@ public class UserLoginController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserRegistrationDTO userRegistrationDTO) {
+    public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDTO userRegistrationDTO) {
         try {
-            userLoginServiceImpl.registerUser(userRegistrationDTO);
-            return ResponseEntity.ok("User registered successfully");
+            userLoginService.registerUser(userRegistrationDTO);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -38,39 +42,28 @@ public class UserLoginController {
     public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest loginRequest) {
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            loginRequest.getUsername(),
-                            loginRequest.getPassword()
-                    )
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
             );
 
-            User user = userLoginServiceImpl.getUserByUsername(loginRequest.getUsername());
-            String token = jwtUtil.generateToken(user.getUsername());
-
-            Integer studentId = user.getStudentId();
-            Integer teacherId = user.getTeacherId();
-
-            LoginResponse response = new LoginResponse(
-                    token,
-                    user.getRole(),
-                    user.getUserId(),
-                    studentId,
-                    teacherId
-            );
-
-            return ResponseEntity.ok(response);
-
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            UserDetails userDetails = userLoginService.loadUserByUsername(loginRequest.getUsername());
+            String token = jwtUtil.generateToken(loginRequest.getUsername());
+            User user = userLoginService.getUserByUsername(loginRequest.getUsername());
+            Integer studentId = user.getStudent() != null ? user.getStudent().getStudentId() : null;
+            Integer teacherId = user.getTeacher() != null ? user.getTeacher().getTeacherId() : null;
+            return ResponseEntity.ok(new LoginResponse(token, user.getRole(), user.getUserId(), studentId, teacherId));
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(401).body(new LoginResponse("Invalid username or password", null, null, null, null));
         }
     }
 
-   @GetMapping("/{userId}")
-public ResponseEntity<?> getUserDetails(@PathVariable int userId) {
-    try {
-        return ResponseEntity.ok(userLoginServiceImpl.getUserDetails(userId));
-    } catch (Exception e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getUserDetails(@PathVariable int userId) {
+        try {
+            User user = userLoginService.getUserDetails(userId);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
-}
+    
 }

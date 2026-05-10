@@ -1,32 +1,32 @@
 package com.edutech.progressive.entity;
-
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
-@Table(
-    name = "enrollment",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"student_id", "course_id"})
-)
+@Table(name = "enrollment", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"student_id", "course_id"})
+})
 public class Enrollment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "enrollment_id")
     private int enrollmentId;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @Temporal(TemporalType.DATE)
+    @Column(name = "enrollment_date", nullable = false)
     private Date enrollmentDate;
 
-    public Enrollment() {
-    }
+    // Constructors, Getters, and Setters
+    public Enrollment() {}
 
     public Enrollment(Student student, Course course, Date enrollmentDate) {
         this.student = student;

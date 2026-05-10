@@ -1,6 +1,4 @@
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:8080'
+  // production: false,
+	apiUrl: window.location.href.replace(/5000\/.*$/, "3000")
 };
-
-                                             

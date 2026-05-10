@@ -1,26 +1,18 @@
-package com.edutech.progressive.service.impl;
 
+package com.edutech.progressive.service.impl;
 import com.edutech.progressive.entity.Attendance;
 import com.edutech.progressive.repository.AttendanceRepository;
 import com.edutech.progressive.service.AttendanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
 public class AttendanceServiceImpl implements AttendanceService {
 
     @Autowired
-    private AttendanceRepository attendanceRepository;
-
-    public AttendanceServiceImpl() {
-    }
-
-    public AttendanceServiceImpl(AttendanceRepository attendanceRepository) {
-        this.attendanceRepository = attendanceRepository;
-    }
+    AttendanceRepository attendanceRepository;
 
     @Override
     public List<Attendance> getAllAttendance() {
@@ -29,32 +21,21 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public Attendance createAttendance(Attendance attendance) {
-
-        boolean exists = attendanceRepository
-                .findByCourse_CourseIdAndStudent_StudentIdAndAttendanceDate(
-                        attendance.getCourse().getCourseId(),
-                        attendance.getStudent().getStudentId(),
-                        attendance.getAttendanceDate()
-                )
-                .isPresent();
-
-        if (exists) {
-            throw new RuntimeException("Attendance already recorded for this student on this date");
+        if (attendanceRepository.findByCourse_CourseIdAndStudent_StudentIdAndAttendanceDate(
+                attendance.getCourse().getCourseId(),
+                attendance.getStudent().getStudentId(),
+                attendance.getAttendanceDate()).isPresent()) {
+            throw new RuntimeException("Attendance for this student and course on the given date already exists.");
         }
-
-        attendance.setAttendanceDate(
-                attendance.getAttendanceDate() == null ? new Date() : attendance.getAttendanceDate()
-        );
-
         return attendanceRepository.save(attendance);
     }
 
     @Override
     public void deleteAttendance(int attendanceId) {
-        Attendance attendance = attendanceRepository.findById(attendanceId)
-                .orElseThrow(() -> new RuntimeException("Attendance record not found"));
-
-        attendanceRepository.delete(attendance);
+        if (!attendanceRepository.existsById(attendanceId)) {
+            throw new RuntimeException("Attendance record not found with ID: " + attendanceId);
+        }
+        attendanceRepository.deleteById(attendanceId);
     }
 
     @Override

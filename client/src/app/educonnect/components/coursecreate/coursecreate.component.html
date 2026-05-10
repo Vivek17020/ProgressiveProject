@@ -1,76 +1,77 @@
-<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light py-5">
-  <div class="row w-100 justify-content-center">
-    <div class="col-xl-6 col-lg-7 col-md-9">
-      <div class="card shadow-lg border-0">
-        <div class="card-body p-5">
-          <div class="d-flex align-items-start mb-4">
-            <div class="me-3 text-primary display-4">
-              <i class="bi bi-journal-plus"></i>
-            </div>
-            <div>
-              <h2 class="h3 fw-bold mb-1">Create New Course</h2>
-              <p class="text-muted mb-0">Publish a course quickly and assign it to your teacher profile.</p>
-            </div>
-          </div>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
 
-          <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="bi bi-check-circle-fill me-2"></i>{{ successMessage }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-          </div>
-          <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-          </div>
+      <div class="card shadow-sm">
+        <div class="card-header text-center bg-white">
+          <h3 class="fw-bold mt-2">Create Course</h3>
+        </div>
 
-          <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" novalidate>
-            <div class="mb-4">
-              <label class="form-label fw-semibold">Course Name</label>
-              <input type="text" class="form-control form-control-lg" formControlName="courseName" placeholder="Enter course title" />
-              <div class="invalid-feedback d-block" *ngIf="submitted && f['courseName'].errors">
+        <div class="card-body">
+
+          <form [formGroup]="courseForm" (ngSubmit)="onSubmit()">
+
+            <!-- Course Name -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Course Name:</label>
+              <input type="text" class="form-control" formControlName="courseName">
+              <div *ngIf="submitted && f['courseName'].errors" class="text-danger small mt-1">
                 Course name is required.
               </div>
             </div>
 
-            <div class="mb-4">
-              <label class="form-label fw-semibold">Description</label>
-              <textarea class="form-control form-control-lg" formControlName="description" rows="5" placeholder="Describe the course content"></textarea>
-              <div class="invalid-feedback d-block" *ngIf="submitted && f['description'].errors">
-                <span *ngIf="f['description'].errors['required']">Description is required.</span>
-                <span *ngIf="f['description'].errors['maxlength']">Maximum 500 characters allowed.</span>
+            <!-- Description -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Description:</label>
+              <textarea class="form-control" rows="3" formControlName="description"></textarea>
+
+              <div *ngIf="submitted && f['description'].errors" class="text-danger small mt-1">
+                <span *ngIf="f['description'].errors['required']">
+                  Description is required.
+                </span>
+                <span *ngIf="f['description'].errors['maxlength']">
+                  Maximum 500 characters allowed.
+                </span>
               </div>
             </div>
 
-            <div class="mb-4">
-              <label class="form-label fw-semibold">Teacher ID</label>
-              <input type="text" class="form-control form-control-lg" formControlName="teacherId" readonly />
-              <div class="invalid-feedback d-block" *ngIf="submitted && f['teacherId'].errors">
+            <!-- Teacher ID -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Teacher ID:</label>
+              <input type="text" class="form-control" formControlName="teacherId">
+
+              <div *ngIf="submitted && f['teacherId'].errors" class="text-danger small mt-1">
                 <span *ngIf="f['teacherId'].errors['required']">Teacher ID is required.</span>
-                <span *ngIf="f['teacherId'].errors['pattern']">Teacher ID must be numeric.</span>
+                <span *ngIf="f['teacherId'].errors['pattern']">Must be numeric.</span>
               </div>
             </div>
 
-            <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
-              <button type="submit" class="btn btn-primary btn-lg flex-fill">Create Course</button>
-              <button type="button" class="btn btn-outline-secondary btn-lg flex-fill" (click)="resetForm()">Reset</button>
+            <!-- Buttons -->
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-success px-4">Submit</button>
+              <button type="button" (click)="resetForm()" class="btn btn-secondary ms-2 px-4">
+                Reset
+              </button>
             </div>
+
           </form>
 
-          <div *ngIf="createdCourse" class="card border-primary mt-4">
-            <div class="card-body">
-              <h5 class="card-title text-primary">Created Course Summary</h5>
-              <p class="card-text mb-2"><strong>Course Name:</strong> {{ createdCourse.courseName }}</p>
-              <p class="card-text mb-2"><strong>Description:</strong> {{ createdCourse.description }}</p>
-              <p class="card-text mb-0"><strong>Teacher ID:</strong> {{ createdCourse.teacherId }}</p>
-            </div>
+          <!-- Success / Error messages -->
+          <div *ngIf="successMessage" class="alert alert-success text-center mt-3">
+            {{ successMessage }}
           </div>
-        </div>
+          <div *ngIf="errorMessage" class="alert alert-danger text-center mt-3">
+            {{ errorMessage }}
+          </div>
 
-        <div class="card-footer bg-light text-center py-3">
-          <small class="text-muted">
-            <i class="bi bi-lightbulb-fill me-1"></i>Course details are saved instantly to EduConnect.
-          </small>
         </div>
       </div>
+
+      <!-- Dashboard Link -->
+            <div class="text-center mt-3">
+              <a routerLink="/educonnect" class="text-primary">Dashboard</a>
+            </div>
+
     </div>
   </div>
 </div>

@@ -1,362 +1,222 @@
 <app-navbar></app-navbar>
-<div class="container-fluid py-4">
-  <div class="row">
-    <div class="col-12">
-      <h1 class="text-center mb-4">
-        <i class="bi bi-mortarboard-fill text-primary me-2"></i>
-        EduConnect Dashboard
-      </h1>
 
-      <!-- Teacher Dashboard -->
-      <div *ngIf="role === 'TEACHER'" class="row g-4">
-        <!-- Teacher Details Card -->
-        <div class="col-12">
-          <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
-              <h5 class="card-title mb-0">
-                <i class="bi bi-person-badge me-2"></i>Teacher Dashboard
-              </h5>
-            </div>
-            <div class="card-body">
-              <div *ngIf="teacherDetails" class="row">
-                <div class="col-md-8">
-                  <h6 class="text-primary mb-3">Teacher Information</h6>
-                  <div class="row g-3">
-                    <div class="col-md-6">
-                      <div class="border-start border-primary border-4 ps-3">
-                        <small class="text-muted">Full Name</small>
-                        <p class="mb-0 fw-bold">{{ teacherDetails?.fullName }}</p>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="border-start border-primary border-4 ps-3">
-                        <small class="text-muted">Email</small>
-                        <p class="mb-0 fw-bold">{{ teacherDetails?.email }}</p>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="border-start border-primary border-4 ps-3">
-                        <small class="text-muted">Subject</small>
-                        <p class="mb-0 fw-bold">{{ teacherDetails?.subject }}</p>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="border-start border-primary border-4 ps-3">
-                        <small class="text-muted">Experience</small>
-                        <p class="mb-0 fw-bold">{{ teacherDetails?.yearsOfExperience }} years</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4 text-center">
-                  <div class="d-grid gap-2">
-                    <button (click)="navigateToEditTeacher()" class="btn btn-outline-primary">
-                      <i class="bi bi-pencil-square me-2"></i>Edit Profile
-                    </button>
-                    <button (click)="deleteTeacher()" class="btn btn-outline-danger">
-                      <i class="bi bi-trash me-2"></i>Delete Profile
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div *ngIf="!teacherDetails" class="text-center py-4">
-                <div class="spinner-border text-primary" role="status">
-                  <span class="visually-hidden">Loading...</span>
-                </div>
-                <p class="mt-2 text-muted">Loading teacher information...</p>
-              </div>
-            </div>
-          </div>
-        </div>
+<div *ngIf="role === 'TEACHER'" class="container mt-4">
 
-        <!-- Courses Section -->
-        <div class="col-12">
-          <div class="card shadow-sm">
-            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-              <h5 class="card-title mb-0">
-                <i class="bi bi-book me-2"></i>Courses Management
-              </h5>
-              <a routerLink="/educonnect/course" class="btn btn-light btn-sm">
-                <i class="bi bi-plus-circle me-1"></i>Add Course
-              </a>
-            </div>
-            <div class="card-body">
-              <div *ngIf="courses.length === 0" class="text-center py-5">
-                <i class="bi bi-book-x display-1 text-muted mb-3"></i>
-                <h6 class="text-muted">No courses available</h6>
-                <a routerLink="/educonnect/course" class="btn btn-primary">
-                  <i class="bi bi-plus-circle me-2"></i>Create Your First Course
-                </a>
-              </div>
-              <div *ngIf="courses.length > 0" class="table-responsive">
-                <table class="table table-hover">
-                  <thead class="table-dark">
-                    <tr>
-                      <th><i class="bi bi-hash me-1"></i>ID</th>
-                      <th><i class="bi bi-book me-1"></i>Course Name</th>
-                      <th><i class="bi bi-card-text me-1"></i>Description</th>
-                      <th><i class="bi bi-gear me-1"></i>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let course of courses" [class.table-primary]="course.courseId === selectedCourseId"
-                        (click)="onCourseSelect(course)" style="cursor: pointer;">
-                      <td>{{ course.courseId }}</td>
-                      <td class="fw-bold">{{ course.courseName }}</td>
-                      <td>{{ course.description }}</td>
-                      <td>
-                        <div class="btn-group btn-group-sm" role="group">
-                          <button (click)="navigateToEditCourse(course.courseId); $event.stopPropagation()"
-                                  class="btn btn-outline-primary">
-                            <i class="bi bi-pencil"></i>
-                          </button>
-                          <button (click)="deleteCourse(course.courseId); $event.stopPropagation()"
-                                  class="btn btn-outline-danger">
-                            <i class="bi bi-trash"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
+  <h2 class="text-center mb-4 fw-bold">Teacher Dashboard</h2>
 
-        <!-- Enrollment Section -->
-        <div *ngIf="selectedCourseId && role === 'TEACHER'" class="col-12">
-          <div class="card shadow-sm">
-            <div class="card-header bg-info text-white">
-              <h5 class="card-title mb-0">
-                <i class="bi bi-people me-2"></i>Enrollments for Course ID: {{ selectedCourseId }}
-              </h5>
-            </div>
-            <div class="card-body">
-              <div *ngIf="selectedCourseEnrollment.length === 0" class="text-center py-4">
-                <i class="bi bi-people display-4 text-muted mb-3"></i>
-                <h6 class="text-muted">No enrollments for this course</h6>
-              </div>
-              <div *ngIf="selectedCourseEnrollment.length > 0" class="table-responsive">
-                <table class="table table-striped">
-                  <thead class="table-light">
-                    <tr>
-                      <th><i class="bi bi-book me-1"></i>Course Name</th>
-                      <th><i class="bi bi-person me-1"></i>Student Name</th>
-                      <th><i class="bi bi-calendar me-1"></i>Enrollment Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let enrollment of selectedCourseEnrollment">
-                      <td>{{ enrollment.course.courseName }}</td>
-                      <td>{{ enrollment.student.fullName }}</td>
-                      <td>{{ enrollment.enrollmentDate | date:'mediumDate' }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
+  <!-- Teacher Details -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Teacher Details</h5>
+    </div>
+    <div class="card-body">
+      <p><strong>Name:</strong> {{ teacherDetails?.fullName }}</p>
+      <p><strong>Email:</strong> {{ teacherDetails?.email }}</p>
+      <p><strong>Subject:</strong> {{ teacherDetails?.subject }}</p>
+      <p><strong>Years of Experience:</strong> {{ teacherDetails?.yearsOfExperience }}</p>
 
-        <!-- Students Overview -->
-        <div *ngIf="role === 'TEACHER'" class="col-12">
-          <div class="card shadow-sm">
-            <div class="card-header bg-warning text-dark">
-              <h5 class="card-title mb-0">
-                <i class="bi bi-people-fill me-2"></i>Students Overview
-              </h5>
-            </div>
-            <div class="card-body">
-              <div *ngIf="students.length === 0" class="text-center py-4">
-                <i class="bi bi-person-x display-4 text-muted mb-3"></i>
-                <h6 class="text-muted">No students registered</h6>
-              </div>
-              <div *ngIf="students.length > 0" class="table-responsive">
-                <table class="table table-hover">
-                  <thead class="table-dark">
-                    <tr>
-                      <th><i class="bi bi-hash me-1"></i>ID</th>
-                      <th><i class="bi bi-person me-1"></i>Name</th>
-                      <th><i class="bi bi-calendar me-1"></i>Date of Birth</th>
-                      <th><i class="bi bi-telephone me-1"></i>Contact</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let student of students">
-                      <td>{{ student.studentId }}</td>
-                      <td class="fw-bold">{{ student.fullName }}</td>
-                      <td>{{ student.dateOfBirth | date:'mediumDate' }}</td>
-                      <td>{{ student.contactNumber }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Student Dashboard -->
-      <div *ngIf="role === 'STUDENT'" class="row g-4">
-        <!-- Student Details Card -->
-        <div class="col-12">
-          <div class="card shadow-sm">
-            <div class="card-header bg-success text-white">
-              <h5 class="card-title mb-0">
-                <i class="bi bi-person-circle me-2"></i>Student Dashboard
-              </h5>
-            </div>
-            <div class="card-body">
-              <div *ngIf="studentDetails" class="row">
-                <div class="col-md-8">
-                  <h6 class="text-success mb-3">Student Information</h6>
-                  <div class="row g-3">
-                    <div class="col-md-6">
-                      <div class="border-start border-success border-4 ps-3">
-                        <small class="text-muted">Full Name</small>
-                        <p class="mb-0 fw-bold">{{ studentDetails?.fullName }}</p>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="border-start border-success border-4 ps-3">
-                        <small class="text-muted">Email</small>
-                        <p class="mb-0 fw-bold">{{ studentDetails?.email }}</p>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="border-start border-success border-4 ps-3">
-                        <small class="text-muted">Date of Birth</small>
-                        <p class="mb-0 fw-bold">{{ studentDetails?.dateOfBirth | date:'mediumDate' }}</p>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="border-start border-success border-4 ps-3">
-                        <small class="text-muted">Contact Number</small>
-                        <p class="mb-0 fw-bold">{{ studentDetails?.contactNumber }}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4 text-center">
-                  <div class="d-grid gap-2">
-                    <button (click)="navigateToEditStudent()" class="btn btn-outline-success">
-                      <i class="bi bi-pencil-square me-2"></i>Edit Profile
-                    </button>
-                    <button (click)="deleteStudent()" class="btn btn-outline-danger">
-                      <i class="bi bi-trash me-2"></i>Delete Profile
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div *ngIf="!studentDetails" class="text-center py-4">
-                <div class="spinner-border text-success" role="status">
-                  <span class="visually-hidden">Loading...</span>
-                </div>
-                <p class="mt-2 text-muted">Loading student information...</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Enrolled Courses -->
-        <div class="col-12">
-          <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
-              <h5 class="card-title mb-0">
-                <i class="bi bi-journal-check me-2"></i>My Enrolled Courses
-              </h5>
-            </div>
-            <div class="card-body">
-              <div *ngIf="enrollments.length === 0" class="text-center py-5">
-                <i class="bi bi-journal-x display-1 text-muted mb-3"></i>
-                <h6 class="text-muted">No enrolled courses yet</h6>
-                <a routerLink="/educonnect" class="btn btn-primary">
-                  <i class="bi bi-search me-2"></i>Browse Available Courses
-                </a>
-              </div>
-              <div *ngIf="enrollments.length > 0" class="table-responsive">
-                <table class="table table-hover">
-                  <thead class="table-dark">
-                    <tr>
-                      <th><i class="bi bi-book me-1"></i>Course Name</th>
-                      <th><i class="bi bi-person-badge me-1"></i>Teacher</th>
-                      <th><i class="bi bi-calendar-check me-1"></i>Enrolled Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let enrollment of enrollments">
-                      <td class="fw-bold">{{ enrollment.course.courseName }}</td>
-                      <td>{{ enrollment.course.teacher.fullName }}</td>
-                      <td>{{ enrollment.enrollmentDate | date:'mediumDate' }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Available Courses -->
-        <div class="col-12">
-          <div class="card shadow-sm">
-            <div class="card-header bg-info text-white">
-              <h5 class="card-title mb-0">
-                <i class="bi bi-search me-2"></i>All Available Courses
-              </h5>
-            </div>
-            <div class="card-body">
-              <div *ngIf="courses.length === 0" class="text-center py-4">
-                <i class="bi bi-book-x display-4 text-muted mb-3"></i>
-                <h6 class="text-muted">No courses available at the moment</h6>
-              </div>
-              <div *ngIf="courses.length > 0" class="table-responsive">
-                <table class="table table-hover">
-                  <thead class="table-dark">
-                    <tr>
-                      <th><i class="bi bi-hash me-1"></i>ID</th>
-                      <th><i class="bi bi-book me-1"></i>Course Name</th>
-                      <th><i class="bi bi-card-text me-1"></i>Description</th>
-                      <th><i class="bi bi-person-badge me-1"></i>Teacher</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let course of courses">
-                      <td>{{ course.courseId }}</td>
-                      <td class="fw-bold">{{ course.courseName }}</td>
-                      <td>{{ course.description }}</td>
-                      <td>{{ course.teacher.fullName }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Welcome Section for Unauthenticated Users -->
-      <div *ngIf="!role" class="row justify-content-center">
-        <div class="col-md-8">
-          <div class="card shadow-lg border-0">
-            <div class="card-body text-center py-5">
-              <i class="bi bi-mortarboard-fill display-1 text-primary mb-4"></i>
-              <h2 class="card-title mb-3">Welcome to EduConnect</h2>
-              <p class="card-text text-muted mb-4">
-                Your comprehensive education management platform for teachers and students.
-              </p>
-              <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                <a routerLink="/auth/login" class="btn btn-primary btn-lg me-md-2">
-                  <i class="bi bi-box-arrow-in-right me-2"></i>Login
-                </a>
-                <a routerLink="/auth/register" class="btn btn-outline-primary btn-lg">
-                  <i class="bi bi-person-plus me-2"></i>Register
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <button (click)="navigateToEditTeacher()" class="btn btn-sm btn-primary me-2">Edit</button>
+      <button (click)="deleteTeacher()" class="btn btn-sm btn-danger">Delete</button>
     </div>
   </div>
+
+  <!-- Courses Section -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-success text-white">
+      <h5 class="mb-0">Courses</h5>
+    </div>
+    <div class="card-body">
+
+      <div *ngIf="courses.length === 0" class="alert alert-warning text-center">
+        No courses available.
+      </div>
+
+      <table *ngIf="courses.length > 0" class="table table-bordered table-hover">
+        <thead class="table-success">
+          <tr>
+            <th>Course Id</th>
+            <th>Course Name</th>
+            <th>Description</th>
+            <th width="150">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let course of courses"
+              (click)="onCourseSelect(course)"
+              [class.table-info]="course.courseId === selectedCourseId">
+
+            <td>{{ course.courseId }}</td>
+            <td>{{ course.courseName }}</td>
+            <td>{{ course.description }}</td>
+            <td>
+              <button (click)="navigateToEditCourse(course.courseId)"
+                      class="btn btn-sm btn-primary me-2">
+                Edit
+              </button>
+              <button (click)="deleteCourse(course.courseId)"
+                      class="btn btn-sm btn-danger">
+                Delete
+              </button>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div> 
+
+  <!-- Enrollment Section -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-info text-white">
+      <h5 class="mb-0">Enrollment in Selected Course - {{ selectedCourseId }}</h5>
+    </div>
+    <div class="card-body">
+
+      <div *ngIf="selectedCourseEnrollment.length === 0" class="alert alert-warning text-center">
+        No enrollments available.
+      </div>
+
+      <table *ngIf="selectedCourseEnrollment.length > 0" class="table table-bordered">
+        <thead class="table-info">
+          <tr>
+            <th>Course Name</th>
+            <th>Student Name</th>
+            <th>Enrollment Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let enrollment of selectedCourseEnrollment">
+            <td>{{ enrollment.course.courseName }}</td>
+            <td>{{ enrollment.student.fullName }}</td>
+            <td>{{ enrollment.enrollmentDate | date }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+  <!-- Students Section -->
+  <div class="card mb-5 shadow-sm">
+    <div class="card-header bg-secondary text-white">
+      <h5 class="mb-0">Students</h5>
+    </div>
+    <div class="card-body">
+
+      <div *ngIf="students.length === 0" class="alert alert-warning text-center">
+        No students available.
+      </div>
+
+      <table *ngIf="students.length > 0" class="table table-bordered">
+        <thead class="table-secondary">
+          <tr>
+            <th>Student Id</th>
+            <th>Student Name</th>
+            <th>Date of Birth</th>
+            <th>Contact Number</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let student of students">
+            <td>{{ student.studentId }}</td>
+            <td>{{ student.fullName }}</td>
+            <td>{{ student.dateOfBirth | date }}</td>
+            <td>{{ student.contactNumber }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+</div>
+
+
+<!-- STUDENT DASHBOARD SECTION -->
+<div *ngIf="role === 'STUDENT'" class="container mt-4">
+
+  <h2 class="text-center mb-4 fw-bold">Student Dashboard</h2>
+
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Student Details</h5>
+    </div>
+    <div class="card-body">
+      <p><strong>Name:</strong> {{ studentDetails?.fullName }}</p>
+      <p><strong>Email:</strong> {{ studentDetails?.email }}</p>
+      <p><strong>Date Of Birth:</strong> {{ studentDetails?.dateOfBirth | date }}</p>
+      <p><strong>Contact Number:</strong> {{ studentDetails?.contactNumber }}</p>
+
+      <button (click)="navigateToEditStudent()" class="btn btn-sm btn-primary me-2">Edit</button>
+      <button (click)="deleteStudent()" class="btn btn-sm btn-danger">Delete</button>
+    </div>
+  </div>
+
+  <!-- Enrolled Courses -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-success text-white">
+      <h5 class="mb-0">Enrolled Courses Details</h5>
+    </div>
+    <div class="card-body">
+
+      <div *ngIf="enrollments.length === 0" class="alert alert-warning text-center">
+        No enrollments available.
+      </div>
+
+      <table *ngIf="enrollments.length > 0" class="table table-bordered">
+        <thead class="table-success">
+          <tr>
+            <th>Course Name</th>
+            <th>Teacher Name</th>
+            <th>Student Name</th>
+            <th>Enrollment Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let enrollment of enrollments">
+            <td>{{ enrollment.course.courseName }}</td>
+            <td>{{ enrollment.course.teacher.fullName }}</td>
+            <td>{{ enrollment.student.fullName }}</td>
+            <td>{{ enrollment.enrollmentDate | date }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+  <!-- All Courses -->
+  <div class="card mb-5 shadow-sm">
+    <div class="card-header bg-secondary text-white">
+      <h5 class="mb-0">All Available Courses</h5>
+    </div>
+    <div class="card-body">
+
+      <div *ngIf="courses.length === 0" class="alert alert-warning text-center">
+        No courses available.
+      </div>
+
+      <table *ngIf="courses.length > 0" class="table table-bordered">
+        <thead class="table-secondary">
+          <tr>
+            <th>Course Id</th>
+            <th>Course Name</th>
+            <th>Description</th>
+            <th>Teacher Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let course of courses">
+            <td>{{ course.courseId }}</td>
+            <td>{{ course.courseName }}</td>
+            <td>{{ course.description }}</td>
+            <td>{{ course.teacher.fullName }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
 </div>

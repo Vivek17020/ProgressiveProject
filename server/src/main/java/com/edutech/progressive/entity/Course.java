@@ -1,11 +1,14 @@
 package com.edutech.progressive.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "course")
@@ -13,35 +16,45 @@ public class Course {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int courseId;
+    @Column(name = "course_id")
+    private Integer courseId;
 
+    @Column(name = "course_name")
     private String courseName;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "teacher_id" , insertable = false, updatable = false)
+    private Integer teacherId;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "teacher_id")
-    @JsonBackReference
-    private Teacher teacher;
-
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<Enrollment> enrollments = new ArrayList<>();
+    Teacher teacher;
 
     public Course() {
     }
 
-    public Course(int courseId, String courseName, String description, int teacherId) {
+    public Course(Integer courseId, String courseName, String description, Teacher teacher) {
         this.courseId = courseId;
         this.courseName = courseName;
         this.description = description;
-        setTeacherId(teacherId);
+        this.teacher = teacher;
     }
 
-    public int getCourseId() {
+    public Course(Integer courseId, String courseName, String description, Integer teacherId, Teacher teacher) {
+        this.courseId = courseId;
+        this.courseName = courseName;
+        this.description = description;
+        this.teacherId = teacherId;
+        this.teacher = teacher;
+    }
+
+    public Integer getCourseId() {
         return courseId;
     }
 
-    public void setCourseId(int courseId) {
+    public void setCourseId(Integer courseId) {
         this.courseId = courseId;
     }
 
@@ -61,6 +74,14 @@ public class Course {
         this.description = description;
     }
 
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
+    }
+
     public Teacher getTeacher() {
         return teacher;
     }
@@ -69,25 +90,4 @@ public class Course {
         this.teacher = teacher;
     }
 
-    public List<Enrollment> getEnrollments() {
-        return enrollments;
-    }
-
-    public void setEnrollments(List<Enrollment> enrollments) {
-        this.enrollments = enrollments;
-    }
-
-    // Compatibility helper for older code/tests
-    @Transient
-    public int getTeacherId() {
-        return (teacher != null) ? teacher.getTeacherId() : 0;
-    }
-
-    // Compatibility helper for older code/tests
-    public void setTeacherId(int teacherId) {
-        if (this.teacher == null) {
-            this.teacher = new Teacher();
-        }
-        this.teacher.setTeacherId(teacherId);
-    }
 }

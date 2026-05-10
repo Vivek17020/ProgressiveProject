@@ -8,80 +8,79 @@ import com.edutech.progressive.repository.StudentRepository;
 import com.edutech.progressive.repository.TeacherRepository;
 import com.edutech.progressive.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.*;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
 
 @Service
 public class UserLoginServiceImpl implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private StudentRepository studentRepository;
-
-    @Autowired
-    private TeacherRepository teacherRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserLoginServiceImpl(UserRepository userRepository,
+            StudentRepository studentRepository,
+            TeacherRepository teacherRepository,
+            PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.studentRepository = studentRepository;
+        this.teacherRepository = teacherRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public void registerUser(UserRegistrationDTO dto) throws Exception {
+
+        // Check if username exists
         if (userRepository.findByUsername(dto.getUsername()) != null) {
-            throw new RuntimeException("Username already exists");
+            throw new Exception("Username already exists");
         }
 
+        // Create base User entity
         User user = new User();
         user.setUsername(dto.getUsername());
+        // user.setStudent();
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setRole(dto.getRole());
+        userRepository.save(user);
 
-        if ("STUDENT".equalsIgnoreCase(dto.getRole()) || "ROLE_STUDENT".equalsIgnoreCase(dto.getRole())) {
-            Student existingStudent = studentRepository.findByEmail(dto.getEmail());
-            if (existingStudent != null) {
-                throw new RuntimeException("Student email already exists");
-            }
+        // Save role-specific data
+        if (dto.getRole().equals("STUDENT")) {
 
             Student student = new Student();
             student.setFullName(dto.getFullName());
+            student.setDateOfBirth(dto.getDateOfBirth());
             student.setContactNumber(dto.getContactNumber());
             student.setEmail(dto.getEmail());
             student.setAddress(dto.getAddress());
-            student.setDateOfBirth(dto.getDateOfBirth());
 
-            Student savedStudent = studentRepository.save(student);
-            user.setStudent(savedStudent);
-            user.setStudentId(savedStudent.getStudentId());
-            user.setReferenceId(savedStudent.getStudentId());
+            studentRepository.save(student);
 
-        } else if ("TEACHER".equalsIgnoreCase(dto.getRole()) || "ROLE_TEACHER".equalsIgnoreCase(dto.getRole())) {
-            Teacher existingTeacher = teacherRepository.findByEmail(dto.getEmail());
-            if (existingTeacher != null) {
-                throw new RuntimeException("Teacher email already exists");
-            }
+            // VERY IMPORTANT → Because User owns the relationship
+            user.setStudent(student);
+            userRepository.save(user);
+        }
+
+        if (dto.getRole().equals("TEACHER")) {
 
             Teacher teacher = new Teacher();
             teacher.setFullName(dto.getFullName());
             teacher.setContactNumber(dto.getContactNumber());
             teacher.setEmail(dto.getEmail());
             teacher.setSubject(dto.getSubject());
-            teacher.setYearsOfExperience(dto.getYearsOfExperience() == null ? 0 : dto.getYearsOfExperience());
+            teacher.setYearsOfExperience(dto.getYearsOfExperience());
 
-            Teacher savedTeacher = teacherRepository.save(teacher);
-            user.setTeacher(savedTeacher);
-            user.setTeacherId(savedTeacher.getTeacherId());
-            user.setReferenceId(savedTeacher.getTeacherId());
+            teacherRepository.save(teacher);
 
-        } else {
-            throw new RuntimeException("Invalid role");
+            // VERY IMPORTANT → Because User owns the relationship
+            user.setTeacher(teacher);
+            userRepository.save(user);
         }
 
-        userRepository.save(user);
     }
 
     public User getUserByUsername(String username) {
@@ -89,37 +88,23 @@ public class UserLoginServiceImpl implements UserDetailsService {
     }
 
     public User getUserDetails(int userId) {
-    return userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
-}
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+    }
 
     @Override
-    public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
-        User user;
-
-        try {
-            int userId = Integer.parseInt(identifier);
-            user = userRepository.findById(userId).orElse(null);
-        } catch (NumberFormatException e) {
-            user = userRepository.findByUsername(identifier);
-        }
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username);
 
         if (user == null) {
-            throw new UsernameNotFoundException("User not found with identifier: " + identifier);
+            throw new UsernameNotFoundException("User not found");
         }
 
-        String role = user.getRole();
-        if (role == null || role.trim().isEmpty()) {
-            throw new UsernameNotFoundException("User has no role assigned");
-        }
-
-        String authorityValue = role.startsWith("ROLE_") ? role : "ROLE_" + role;
-        GrantedAuthority authority = new SimpleGrantedAuthority(authorityValue);
-
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                Collections.singletonList(authority)
-        );
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword()) // hashed password
+                .roles(user.getRole()) // STUDENT / TEACHER / ADMIN
+                .build();
     }
+
 }

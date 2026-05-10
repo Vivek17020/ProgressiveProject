@@ -1,72 +1,103 @@
-<app-navbar></app-navbar>
-<div class="edit-student-container">
-    <h1>Edit Student</h1>
-
-    <div *ngIf="successMessage" class="alert alert-success">
-        {{ successMessage }}
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">Update Student</h4>
     </div>
 
-    <div *ngIf="errorMessage" class="alert alert-danger">
-        {{ errorMessage }}
+    <div class="card-body">
+      <form [formGroup]="studentForm" (ngSubmit)="onSubmit()">
+
+        <!-- Full Name -->
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-control" formControlName="fullName" />
+          <div class="text-danger mt-1"
+               *ngIf="studentForm.get('fullName')?.invalid && studentForm.get('fullName')?.touched">
+            Full Name is required (min 2 characters).
+          </div>
+        </div>
+
+        <!-- Username -->
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input type="text" class="form-control" formControlName="username" />
+          <div class="text-danger mt-1"
+               *ngIf="studentForm.get('username')?.invalid && studentForm.get('username')?.touched">
+            <small *ngIf="studentForm.get('username')?.hasError('required')">Username is required.</small>
+            <small *ngIf="studentForm.get('username')?.hasError('pattern')">No special characters allowed.</small>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" formControlName="password" />
+          <div class="text-danger mt-1"
+               *ngIf="studentForm.get('password')?.invalid && studentForm.get('password')?.touched">
+            <small *ngIf="studentForm.get('password')?.hasError('required')">Password is required.</small>
+            <small *ngIf="studentForm.get('password')?.hasError('minlength')">Min 8 characters.</small>
+            <small *ngIf="studentForm.get('password')?.hasError('pattern')">
+              Must include 1 uppercase letter & 1 digit.
+            </small>
+          </div>
+        </div>
+
+        <!-- Date of Birth -->
+        <div class="mb-3">
+          <label class="form-label">Date of Birth</label>
+          <input type="date" class="form-control" formControlName="dateOfBirth" />
+          <div class="text-danger mt-1"
+               *ngIf="studentForm.get('dateOfBirth')?.invalid && studentForm.get('dateOfBirth')?.touched">
+            Date of Birth is required.
+          </div>
+        </div>
+
+        <!-- Contact Number -->
+        <div class="mb-3">
+          <label class="form-label">Contact Number</label>
+          <input type="text" class="form-control" formControlName="contactNumber" />
+          <div class="text-danger mt-1"
+               *ngIf="studentForm.get('contactNumber')?.invalid && studentForm.get('contactNumber')?.touched">
+            Must be a valid 10‑digit number.
+          </div>
+        </div>
+
+        <!-- Email (readonly) -->
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" formControlName="email" readonly />
+        </div>
+
+        <!-- Address -->
+        <div class="mb-3">
+          <label class="form-label">Address</label>
+          <textarea rows="3" class="form-control" formControlName="address"></textarea>
+          <div class="text-danger mt-1"
+               *ngIf="studentForm.get('address')?.invalid && studentForm.get('address')?.touched">
+            Address must contain at least 5 characters.
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-success w-100" [disabled]="studentForm.invalid">
+          Update Student
+        </button>
+
+        <!-- Dashboard Link -->
+        <div class="text-center mt-3">
+          <a routerLink="/educonnect" class="text-decoration-none">Back to Dashboard</a>
+        </div>
+      </form>
     </div>
+  </div>
 
-    <form [formGroup]="studentForm" (ngSubmit)="onSubmit()" class="student-form">
-        <div class="form-group">
-            <label for="fullName">Full Name:</label>
-            <input type="text" id="fullName" formControlName="fullName" class="form-control">
-            <div *ngIf="studentForm.get('fullName')?.invalid && studentForm.get('fullName')?.touched" class="error-message">
-                Full name is required and must be at least 2 characters.
-            </div>
-        </div>
+  <!-- Success Alert -->
+  <div *ngIf="successMessage" class="alert alert-success mt-3">
+    {{ successMessage }}
+  </div>
 
-        <div class="form-group">
-            <label for="dateOfBirth">Date of Birth:</label>
-            <input type="date" id="dateOfBirth" formControlName="dateOfBirth" class="form-control">
-            <div *ngIf="studentForm.get('dateOfBirth')?.invalid && studentForm.get('dateOfBirth')?.touched" class="error-message">
-                Date of birth is required.
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="contactNumber">Contact Number:</label>
-            <input type="tel" id="contactNumber" formControlName="contactNumber" class="form-control">
-            <div *ngIf="studentForm.get('contactNumber')?.invalid && studentForm.get('contactNumber')?.touched" class="error-message">
-                Contact number must be 10 digits.
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" id="username" formControlName="username" class="form-control">
-            <div *ngIf="studentForm.get('username')?.invalid && studentForm.get('username')?.touched" class="error-message">
-                Username is required and must contain only letters and numbers.
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" formControlName="password" class="form-control">
-            <div *ngIf="studentForm.get('password')?.invalid && studentForm.get('password')?.touched" class="error-message">
-                Password must be at least 8 characters and contain at least one uppercase letter and one number.
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" formControlName="email" class="form-control" readonly>
-        </div>
-
-        <div class="form-group">
-            <label for="address">Address:</label>
-            <textarea id="address" formControlName="address" class="form-control" rows="3"></textarea>
-            <div *ngIf="studentForm.get('address')?.invalid && studentForm.get('address')?.touched" class="error-message">
-                Address is required and must be at least 5 characters.
-            </div>
-        </div>
-
-        <div class="form-actions">
-            <button type="submit" [disabled]="studentForm.invalid" class="btn btn-primary">Update Student</button>
-            <button type="button" (click)="goBack()" class="btn btn-secondary">Cancel</button>
-        </div>
-    </form>
+  <!-- Error Alert -->
+  <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+    {{ errorMessage }}
+  </div>
 </div>

@@ -15,9 +15,7 @@ export class NavBarComponent implements OnInit {
         this.role = localStorage.getItem('role');
     }
 
-    logout(): void {
-        localStorage.clear();
-        this.role = null;
-        this.router.navigate(['/auth/login']);
+    goToDashboard(): void {
+        this.router.navigate(['/dashboard']);
     }
 }

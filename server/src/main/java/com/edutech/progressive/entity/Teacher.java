@@ -1,22 +1,11 @@
 package com.edutech.progressive.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "teacher")
@@ -24,23 +13,29 @@ public class Teacher implements Comparable<Teacher> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "teacher_id")
     private int teacherId;
 
+    @Column(name = "full_name")
     private String fullName;
-    private String subject;
-    private String contactNumber;
-    private String email;
-    private int yearsOfExperience;
 
-    @OneToMany(mappedBy = "teacher", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<Course> courses = new ArrayList<>();
+    @Column(name = "subject")
+    private String subject;
+
+    @Column(name = "contact_number")
+    private String contactNumber;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "years_of_experience")
+    private int yearsOfExperience;
 
     public Teacher() {
     }
 
-    public Teacher(int teacherId, String fullName, String subject, String contactNumber,
-                   String email, int yearsOfExperience) {
+    public Teacher(int teacherId, String fullName, String subject, String contactNumber, String email,
+            int yearsOfExperience) {
         this.teacherId = teacherId;
         this.fullName = fullName;
         this.subject = subject;
@@ -97,16 +92,8 @@ public class Teacher implements Comparable<Teacher> {
         this.yearsOfExperience = yearsOfExperience;
     }
 
-    public List<Course> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
-    }
-
     @Override
     public int compareTo(Teacher o) {
-        return Integer.compare(this.yearsOfExperience, o.yearsOfExperience);
+        return Integer.compare(this.yearsOfExperience, o.getYearsOfExperience());
     }
 }

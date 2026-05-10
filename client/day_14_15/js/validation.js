@@ -1,67 +1,45 @@
 function login() {
-    const usernameElement = document.getElementById("loginUsername");
-    const passwordElement = document.getElementById("loginPassword");
+    var username = document.getElementById("loginUsername").value;
+    var password = document.getElementById("loginPassword").value;
 
-    const username = usernameElement ? usernameElement.value.trim() : "";
-    const password = passwordElement ? passwordElement.value.trim() : "";
-
-    // Validate login username
-    if (username === "") {
-        alert("Username should not be empty");
-        return;
-    }
-
-    // Validate login password
-    if (password === "") {
-        alert("Password should not be empty");
-        return;
-    }
-
-    // Exact console log format expected by test
-    console.log(`Login clicked. Username: ${username}, Password: ${password}`);
+    // You can perform login validation and authentication here
+    // For simplicity, let's just display an alert
+    console.log("Login clicked. Username: " + username + ", Password: " + password);
 }
 
 function register() {
-    const nameElement = document.getElementById("registerName");
-    const emailElement = document.getElementById("registerEmail");
-    const usernameElement = document.getElementById("registerUsername");
-    const passwordElement = document.getElementById("registerPassword");
+    var name = document.getElementById("registerName").value;
+    var email = document.getElementById("registerEmail").value;
+    var username = document.getElementById("registerUsername").value;
+    var password = document.getElementById("registerPassword").value;
 
-    const name = nameElement ? nameElement.value.trim() : "";
-    const email = emailElement ? emailElement.value.trim() : "";
-    const username = usernameElement ? usernameElement.value.trim() : "";
-    const password = passwordElement ? passwordElement.value.trim() : "";
-
-    // Every field is required
+    // Frontend validation for registration form
     if (name === "" || email === "" || username === "" || password === "") {
-        alert("All fields are required");
+        alert("All fields are mandatory. Please fill in all the details.");
         return;
     }
 
     // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-        alert("Please enter a valid email address");
+        alert("Please enter a valid email address.");
         return;
     }
 
     // Validate username (no special characters)
-    const usernameRegex = /^[a-zA-Z0-9]+$/;
+    var usernameRegex = /^[a-zA-Z0-9]+$/;
     if (!usernameRegex.test(username)) {
-        alert("Username should not contain special characters");
+        alert("Username should not contain special characters.");
         return;
     }
 
-    // Validate password
-    // At least 8 characters, one capital letter, and one numeric
-    const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+    // Validate password (at least 8 characters, one capital letter, and one numeric)
+    var passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
     if (!passwordRegex.test(password)) {
-        alert("Password must be at least 8 characters long and contain at least one capital letter and one number");
+        alert("Password should be at least 8 characters and must contain at least one capital letter and one numeric.");
         return;
     }
 
-    // Exact console log format expected by test
-    console.log(`Register clicked. Name: ${name}, Email: ${email}, Username: ${username}, Password: ${password}`);
+    console.log("Register clicked. Name: " + name + ", Email: " + email + ", Username: " + username + ", Password: " + password);
 }
-
 module.exports = { login, register };

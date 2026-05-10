@@ -2,17 +2,21 @@ package com.edutech.progressive.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
 
 import com.edutech.progressive.entity.Teacher;
 import com.edutech.progressive.service.TeacherService;
-
-public class TeacherServiceImplArraylist  implements TeacherService {
-
+@Service
+public class TeacherServiceImplArraylist implements TeacherService {
+    
     private static List<Teacher> teacherList = new ArrayList<>();
+
     @Override
     public List<Teacher> getAllTeachers() {
-       return teacherList;
+        return teacherList;
     }
 
     @Override
@@ -23,11 +27,23 @@ public class TeacherServiceImplArraylist  implements TeacherService {
 
     @Override
     public List<Teacher> getTeacherSortedByExperience() {
-        Collections.sort(teacherList);
-        return teacherList;
+        List<Teacher> sortedByExperience = new ArrayList<>(teacherList);
+        Collections.sort(sortedByExperience);
+        return sortedByExperience;
     }
-    public void emptyArrayList(){
-        teacherList = new ArrayList<>();
+
+    @Override
+    public void emptyArrayList() {
+        teacherList.clear();
     }
+
+    public Comparator yearsOfExperienceComparator = new Comparator<Teacher>() {
+
+        @Override
+        public int compare(Teacher t1, Teacher t2) {
+            return Integer.compare(t1.getYearsOfExperience(), t2.getYearsOfExperience());
+        }
+
+    };
 
 }

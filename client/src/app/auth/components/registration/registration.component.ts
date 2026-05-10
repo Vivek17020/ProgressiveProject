@@ -2,6 +2,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+
 
 @Component({
     selector: 'app-registration',
@@ -9,95 +11,77 @@ import { AuthService } from '../../services/auth.service';
     styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent {
-
     registrationForm!: FormGroup;
     successMessage: string | null = null;
     errorMessage: string | null = null;
-    selectedRole: string | null = null;
+    selectedRole: string | null = null; // To track the selected role
 
-    registeredUser: any = null; // ✅ FIX ADDED
-
-    constructor(private formBuilder: FormBuilder, private authService: AuthService) { }
+    constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) { }
 
     ngOnInit(): void {
         this.registrationForm = this.formBuilder.group({
-            username: ['', [
-                Validators.required,
-                Validators.pattern(/^[a-zA-Z0-9]+$/),
-                Validators.minLength(3)
-            ]],
+            username: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]],
             email: ['', [Validators.required, Validators.email]],
-            password: ['', [
-                Validators.required,
-                Validators.minLength(8),
-                Validators.pattern(/^(?=.*[A-Z])(?=.*\d).+$/)
-            ]],
+            password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Z])(?=.*\d).+$/)]],
             role: ['', [Validators.required]],
             fullName: ['', Validators.required],
-            contactNumber: ['', [
-                Validators.required,
-                Validators.pattern(/^[0-9]{10}$/) // ✅ 10 digit validation
-            ]],
-            subject: [''],
-            yearsOfExperience: [null],
-            dateOfBirth: [null],
-            address: [''],
+            contactNumber: ['', Validators.required],
+            subject: [''], // Teacher-specific field
+            yearsOfExperience: [null], // Teacher-specific field
+            dateOfBirth: [null], // Student-specific field
+            address: [''], // Student-specific field
         });
     }
 
     onRoleChange(event: Event): void {
-        const role = (event.target as HTMLSelectElement).value;
+        const selectElement = event.target as HTMLSelectElement;
+        const role = selectElement.value;
         this.selectedRole = role;
 
+        // Reset unused fields based on the role
         if (role === 'TEACHER') {
-            this.registrationForm.patchValue({
-                dateOfBirth: null,
-                address: ''
-            });
+            this.registrationForm.patchValue({ dateOfBirth: null, address: '' });
         } else if (role === 'STUDENT') {
-            this.registrationForm.patchValue({
-                subject: '',
-                yearsOfExperience: null
-            });
+            this.registrationForm.patchValue({ subject: '', yearsOfExperience: null });
         }
     }
 
+
     onSubmit(): void {
+        console.log("dablas button");
         if (this.registrationForm.valid) {
-
-            const formData = this.registrationForm.value;
-
-            this.authService.createUser(formData).subscribe({
+            this.authService.createUser(this.registrationForm.value).subscribe({
                 next: (response) => {
-                    this.successMessage = "User successfully registered ✅";
+                    console.log("Success");
+
+                    console.log(this.registrationForm.value);
+                    this.successMessage = "User successfully registered";
                     this.errorMessage = null;
-
-                    this.registeredUser = formData; // ✅ FIX ADDED
-
-                    console.log('Success:', response);
-
                     this.resetForm();
+                    console.log('Success:', this.successMessage);
+                    this.router.navigate(['/auth'])
                 },
-                error: (error: HttpErrorResponse) => {
+                error: (error) => {
                     if (error.error) {
                         this.errorMessage = error.error;
                     } else {
-                        this.errorMessage = 'Something went wrong. Please try again.';
+                        this.errorMessage = 'An unexpected error occurred. Please try again later.';
                     }
-
                     this.successMessage = null;
                     console.error('Error:', this.errorMessage);
                 }
-            });
-
+            })
         } else {
-            this.errorMessage = 'Please fill all fields correctly ❌';
+            this.errorMessage = 'Please fill out all fields correctly.';
             this.successMessage = null;
         }
     }
 
+    goToLogin() {
+        this.router.navigate(['../']); // navigates to auth/ (login page)
+    }
+
     resetForm(): void {
         this.registrationForm.reset();
-        this.selectedRole = null; // ✅ reset role UI as well
     }
 }

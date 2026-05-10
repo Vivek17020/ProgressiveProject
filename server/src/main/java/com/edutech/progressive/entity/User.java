@@ -11,36 +11,24 @@ public class User {
     @Column(name = "user_id")
     private int userId;
 
-    @Column(name = "username", length = 100, unique = true, nullable = false)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "role", nullable = false)
     private String role;
 
-    @Column(name = "reference_id")
-    private Integer referenceId;
-
-    @Column(name = "student_id")
-    private Integer studentId;
-
-    @Column(name = "teacher_id")
-    private Integer teacherId;
-
-    @Transient
-    private String token;
-
-    @Transient
-    private String roles;
-
-    @Transient
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "student_id")
     private Student student;
 
-    @Transient
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
+    // Constructors
     public User() {
     }
 
@@ -51,16 +39,9 @@ public class User {
         this.role = role;
         this.student = student;
         this.teacher = teacher;
-
-        if (student != null) {
-            this.referenceId = student.getStudentId();
-            this.studentId = student.getStudentId();
-        } else if (teacher != null) {
-            this.referenceId = teacher.getTeacherId();
-            this.teacherId = teacher.getTeacherId();
-        }
     }
 
+    // Getters and Setters
     public int getUserId() {
         return userId;
     }
@@ -85,7 +66,6 @@ public class User {
         this.password = password;
     }
 
-    // persisted role
     public String getRole() {
         return role;
     }
@@ -94,60 +74,12 @@ public class User {
         this.role = role;
     }
 
-    public Integer getReferenceId() {
-        return referenceId;
-    }
-
-    public void setReferenceId(Integer referenceId) {
-        this.referenceId = referenceId;
-    }
-
-    public Integer getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(Integer studentId) {
-        this.studentId = studentId;
-        this.referenceId = studentId;
-    }
-
-    public Integer getTeacherId() {
-        return teacherId;
-    }
-
-    public void setTeacherId(Integer teacherId) {
-        this.teacherId = teacherId;
-        this.referenceId = teacherId;
-    }
-
-    // helper/token fields
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getRoles() {
-        return roles != null ? roles : role;
-    }
-
-    public void setRoles(String roles) {
-        this.roles = roles;
-        this.role = roles;
-    }
-
     public Student getStudent() {
         return student;
     }
 
     public void setStudent(Student student) {
         this.student = student;
-        if (student != null) {
-            this.referenceId = student.getStudentId();
-            this.studentId = student.getStudentId();
-        }
     }
 
     public Teacher getTeacher() {
@@ -156,9 +88,5 @@ public class User {
 
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
-        if (teacher != null) {
-            this.referenceId = teacher.getTeacherId();
-            this.teacherId = teacher.getTeacherId();
-        }
     }
 }

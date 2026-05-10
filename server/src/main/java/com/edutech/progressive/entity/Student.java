@@ -1,37 +1,53 @@
+
 package com.edutech.progressive.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.util.Date;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "student")
-public class Student implements Comparable<Student> {
+public class Student implements Comparable<Student>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int studentId;
+    @Column(name = "student_id")
+    private Integer studentId;
 
+    @Column(name = "full_name")    
     private String fullName;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+    @Column(name = "date_of_birth") 
     private Date dateOfBirth;
 
+    @Column(name = "contact_number") 
     private String contactNumber;
+
+    @Column(name = "email") 
     private String email;
+    
+    @Column(name = "address") 
     private String address;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<Enrollment> enrollments = new ArrayList<>();
+    public Student() {}
 
-    public Student() {
-    }
-
-    public Student(int studentId, String fullName, Date dateOfBirth, String contactNumber, String email, String address) {
+    public Student(Integer studentId, String fullName, Date dateOfBirth,
+                   String contactNumber, String email, String address) {
         this.studentId = studentId;
         this.fullName = fullName;
         this.dateOfBirth = dateOfBirth;
@@ -40,64 +56,26 @@ public class Student implements Comparable<Student> {
         this.address = address;
     }
 
-    public int getStudentId() {
-        return studentId;
-    }
+    public Integer getStudentId() { return studentId; }
+    public void setStudentId(Integer studentId) { this.studentId = studentId; }
 
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
-    }
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
 
-    public String getFullName() {
-        return fullName;
-    }
+    public Date getDateOfBirth() { return dateOfBirth; }
+    public void setDateOfBirth(Date dateOfBirth) { this.dateOfBirth = dateOfBirth; }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
+    public String getContactNumber() { return contactNumber; }
+    public void setContactNumber(String contactNumber) { this.contactNumber = contactNumber; }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getContactNumber() {
-        return contactNumber;
-    }
-
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public List<Enrollment> getEnrollments() {
-        return enrollments;
-    }
-
-    public void setEnrollments(List<Enrollment> enrollments) {
-        this.enrollments = enrollments;
-    }
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
 
     @Override
     public int compareTo(Student o) {
-        return this.fullName.compareTo(o.fullName);
+        return this.fullName.compareTo(o.getFullName());
     }
 }

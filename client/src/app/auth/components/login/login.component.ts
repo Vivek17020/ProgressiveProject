@@ -1,87 +1,63 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, of, tap, catchError } from 'rxjs';
+import { catchError, of, tap } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
-  loginForm!: FormGroup;
-  loginError$: Observable<{ [key: string]: string; }> | undefined;
-  successMessage: string | null = null;
-  errorMessage: string | null = null;
-  showPassword: boolean = false;
-  isLoading: boolean = false;
+export class LoginComponent {
+    loginForm!: FormGroup;
+    errorMessage: string | null = null;
+    successMessage: string | null = null;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private authService: AuthService,
-    private router: Router
-  ) {}
+    constructor(
+        private formBuilder: FormBuilder,
+        private authService: AuthService,
+        private router: Router
+    ) { }
 
-  ngOnInit(): void {
-    this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9]+$/)]],
-      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Z])(?=.*\d).+$/)]]
-    });
-  }
-
-  onSubmit(): void {
-    if (this.loginForm.invalid) {
-      this.loginError$ = of({
-        message: "Please make sure you have filled all the required fields correctly",
-      });
-      return;
-    } else {
-      this.isLoading = true;
-      this.successMessage = null;
-      this.errorMessage = null;
-
-      const { username, password } = this.loginForm.value;
-      this.loginError$ = this.authService
-        .login({ username, password })
-        .pipe(
-          tap((response) => {
-            console.log(response);
-
-            localStorage.setItem("token", response['token']);
-            localStorage.setItem("role", response['role']);
-            localStorage.setItem("userId", response['userId']);
-
-            if (response['studentId']) {
-              localStorage.setItem("studentId", response['studentId']);
-            }
-            if (response['teacherId']) {
-              localStorage.setItem("teacherId", response['teacherId']);
-            }
-
-            console.log(localStorage.getItem("role"));
-
-            this.successMessage = "Login successful! Redirecting...";
-            this.isLoading = false;
-
-            const role = this.authService.getRole();
-            if (role === 'TEACHER' || role === 'STUDENT') {
-              this.router.navigate(['/educonnect']);
-            } else {
-              this.router.navigate(['/dashboard']);
-            }
-          }),
-          catchError((error) => {
-            console.error("Login error:", error);
-            this.errorMessage = "Invalid username or password";
-            this.isLoading = false;
-            return of({ message: "Invalid username or password" });
-          })
-        );
+    ngOnInit(): void {
+        this.loginForm = this.formBuilder.group({
+            username: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]],
+            password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Z])(?=.*\d).+$/)]]
+        });
     }
-  }
 
-  togglePasswordVisibility(): void {
-    this.showPassword = !this.showPassword;
-  }
+    onSubmit(): void {
+        console.log('dablas login cha button');
+        if (this.loginForm.valid) {
+            this.authService.login(this.loginForm.value).pipe(
+                tap((response: any) => {
+                    console.log("response", response);
+                    localStorage.setItem("token", response.token);
+                    localStorage.setItem("role", response.roles);
+                    
+                    localStorage.setItem("user_id", response.userId);
+                    localStorage.setItem("teacher_id", response.teacherId);
+                    localStorage.setItem("student_id", response.studentId);
+                    console.log(localStorage.getItem("role"));
+                    console.log("----");
+                    console.log(localStorage.getItem("token"));
+
+                    this.router.navigate(["/educonnect"]);
+                }),
+                catchError((error: string) => {
+                    this.errorMessage = 'Invalid username or password';
+                    console.error("Login error:", error);
+                    return of(null);
+                })
+            ).subscribe();
+        } else {
+            this.errorMessage = 'Please fill out the form correctly.';
+        }
+    }
+
+    goToRegister() {
+        this.router.navigate(['../register']);
+    }
+
 }

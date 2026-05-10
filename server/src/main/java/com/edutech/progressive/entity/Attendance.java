@@ -1,40 +1,40 @@
 package com.edutech.progressive.entity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
-@Table(
-    name = "attendance",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"course_id", "student_id", "attendance_date"})
-)
+@Table(name = "attendance", uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "course_id", "student_id", "attendance_date" })
+})
 public class Attendance {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "attendance_id")
     private int attendanceId;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "course_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "course_id")
     private Course course;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "student_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "student_id")
     private Student student;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "attendance_date", nullable = false)
+    @Column(name = "attendance_date")
     private Date attendanceDate;
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     private String status;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at", updatable = false, insertable = false)
+    @Column(name = "created_at", updatable = false)
     private Date createdAt;
 
     public Attendance() {
+        this.createdAt = new Date();
     }
 
     public Attendance(Course course, Student student, Date attendanceDate, String status) {
@@ -42,7 +42,10 @@ public class Attendance {
         this.student = student;
         this.attendanceDate = attendanceDate;
         this.status = status;
+        this.createdAt = new Date();
     }
+
+    // Getters and Setters
 
     public int getAttendanceId() {
         return attendanceId;
@@ -87,4 +90,9 @@ public class Attendance {
     public Date getCreatedAt() {
         return createdAt;
     }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
 }

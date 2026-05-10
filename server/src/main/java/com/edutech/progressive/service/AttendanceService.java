@@ -4,15 +4,18 @@ import com.edutech.progressive.entity.Attendance;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public interface AttendanceService {
 
-    List<Attendance> getAllAttendance();
+    public List<Attendance> getAllAttendance() throws Exception;
 
-    Attendance createAttendance(Attendance attendance);
+    Attendance createAttendance(Attendance attendance ) throws Exception;
 
-    void deleteAttendance(int attendanceId);
+    public void deleteAttendance(int attendanceId ) throws Exception;
 
-    List<Attendance> getAttendanceByStudent(int studentId);
+    public List<Attendance> getAttendanceByStudent(int studentId ) throws Exception;
 
-    List<Attendance> getAttendanceByCourse(int courseId);
+    public List<Attendance> getAttendanceByCourse(int courseId ) throws Exception;
 }

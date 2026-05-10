@@ -3,10 +3,9 @@ package com.edutech.progressive.dto;
 import java.util.Date;
 
 public class UserRegistrationDTO {
-
     private String username;
     private String password;
-    private String role;
+    private String role; 
     private String fullName;
     private String contactNumber;
     private String email;
@@ -14,9 +13,6 @@ public class UserRegistrationDTO {
     private Date dateOfBirth;
     private String subject;
     private Integer yearsOfExperience;
-
-    public UserRegistrationDTO() {
-    }
 
     public String getUsername() {
         return username;

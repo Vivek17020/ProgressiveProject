@@ -12,77 +12,73 @@ import java.util.List;
 @RestController
 @RequestMapping("/enrollment")
 public class EnrollmentController {
-
     @Autowired
     private EnrollmentServiceImpl enrollmentServiceImpl;
 
-    // GET /enrollment
     @GetMapping
     public ResponseEntity<List<Enrollment>> getAllEnrollments() {
         try {
-            return ResponseEntity.ok(enrollmentServiceImpl.getAllEnrollments());
+            List<Enrollment> enrollmentList = enrollmentServiceImpl.getAllEnrollments();
+            return new ResponseEntity<>(enrollmentList, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    // POST /enrollment
     @PostMapping
-    public ResponseEntity<Integer> createEnrollment(@RequestBody Enrollment enrollment) {
+    public ResponseEntity<?> createEnrollment(@RequestBody Enrollment enrollment) {
         try {
-            int id = enrollmentServiceImpl.createEnrollment(enrollment);
-            return new ResponseEntity<>(id, HttpStatus.CREATED);
+            return new ResponseEntity<>(enrollmentServiceImpl.createEnrollment(enrollment), HttpStatus.CREATED);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }  catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    // PUT /enrollment/{enrollmentId}
-    @PutMapping("/{enrollmentId}")
-    public ResponseEntity<Void> updateEnrollment(@PathVariable int enrollmentId,
-                                                 @RequestBody Enrollment enrollment) {
+    @PutMapping(("/{enrollmentId}"))
+    public ResponseEntity<?> updateEnrollment(@PathVariable int enrollmentId, @RequestBody Enrollment enrollment) {
         try {
-            enrollment.setEnrollmentId(enrollmentId);
+            // enrollment.setEnrollmentId(enrollmentId);
             enrollmentServiceImpl.updateEnrollment(enrollment);
-            return ResponseEntity.ok().build();
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    // GET /enrollment/{enrollmentId}
     @GetMapping("/{enrollmentId}")
-    public ResponseEntity<Enrollment> getEnrollmentById(@PathVariable int enrollmentId) {
+    public ResponseEntity<?> getEnrollmentById(@PathVariable int enrollmentId) {
         try {
-            return ResponseEntity.ok(enrollmentServiceImpl.getEnrollmentById(enrollmentId));
+            Enrollment enrollment = enrollmentServiceImpl.getEnrollmentById(enrollmentId);
+            return new ResponseEntity<>(enrollment, HttpStatus.OK);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    // GET /enrollment/student/{studentId}
     @GetMapping("/student/{studentId}")
     public ResponseEntity<List<Enrollment>> getAllEnrollmentsByStudent(@PathVariable int studentId) {
         try {
-            return ResponseEntity.ok(enrollmentServiceImpl.getAllEnrollmentsByStudent(studentId));
+            List<Enrollment> enrollmentList = enrollmentServiceImpl.getAllEnrollmentsByStudent(studentId);
+            return new ResponseEntity<>(enrollmentList, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    // GET /enrollment/course/{courseId}
     @GetMapping("/course/{courseId}")
     public ResponseEntity<List<Enrollment>> getAllEnrollmentsByCourse(@PathVariable int courseId) {
         try {
-            return ResponseEntity.ok(enrollmentServiceImpl.getAllEnrollmentsByCourse(courseId));
+            List<Enrollment> enrollmentList = enrollmentServiceImpl.getAllEnrollmentsByCourse(courseId);
+            return new ResponseEntity<>(enrollmentList, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }

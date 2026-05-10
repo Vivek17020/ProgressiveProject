@@ -2,7 +2,6 @@ package com.edutech.progressive.controller;
 
 import com.edutech.progressive.dto.StudentDTO;
 import com.edutech.progressive.entity.Student;
-import com.edutech.progressive.exception.StudentAlreadyExistsException;
 import com.edutech.progressive.service.impl.StudentServiceImplArraylist;
 import com.edutech.progressive.service.impl.StudentServiceImplJpa;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,49 +16,53 @@ import java.util.List;
 public class StudentController {
 
     @Autowired
-    private StudentServiceImplJpa studentServiceImplJpa;
+    StudentServiceImplArraylist studentServiceImplArraylist;
 
-    private final StudentServiceImplArraylist arrayListService = new StudentServiceImplArraylist();
+    @Autowired
+    StudentServiceImplJpa studentServiceImplJpa;
 
     @GetMapping
     public ResponseEntity<List<Student>> getAllStudents() {
         try {
-            return ResponseEntity.ok(studentServiceImplJpa.getAllStudents());
+            List<Student> studentList = studentServiceImplJpa.getAllStudents();
+            return new ResponseEntity<>(studentList, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/{studentId}")
-    public ResponseEntity<Student> getStudentById(@PathVariable int studentId) {
-        try {
-            return ResponseEntity.ok(studentServiceImplJpa.getStudentById(studentId));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
-    }
+        public ResponseEntity<Student> getStudentById(@PathVariable int studentId) {
+                try {
+                            Student student = studentServiceImplJpa.getStudentById(studentId);
+                                        return new ResponseEntity<>(student, HttpStatus.OK);
+                                                } catch (Exception e) {
+                                                            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                                                                    }
+                                                                        }
 
     @PostMapping
-    public ResponseEntity<Integer> addStudent(@RequestBody Student student) {
+    public ResponseEntity<?> addStudent(@RequestBody Student student) {
         try {
-            return new ResponseEntity<>(studentServiceImplJpa.addStudent(student), HttpStatus.CREATED);
-        } catch (StudentAlreadyExistsException e) {
-            return ResponseEntity.badRequest().build();
+            int studentId = studentServiceImplJpa.addStudent(student);
+            return new ResponseEntity<>(studentId, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return new ResponseEntity<>("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/{studentId}")
-    public ResponseEntity<Void> updateStudent(@PathVariable int studentId, @RequestBody StudentDTO studentDTO) {
+    public ResponseEntity<?> updateStudent(@PathVariable int studentId, @RequestBody StudentDTO student) {
         try {
-            studentDTO.setStudentId(studentId);
-            studentServiceImplJpa.modifyStudentDetails(studentDTO);
-            return ResponseEntity.ok().build();
-        } catch (StudentAlreadyExistsException e) {
-            return ResponseEntity.badRequest().build();
+            student.setStudentId(studentId);
+            studentServiceImplJpa.modifyStudentDetails(student);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return new ResponseEntity<>("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -67,24 +70,29 @@ public class StudentController {
     public ResponseEntity<Void> deleteStudent(@PathVariable int studentId) {
         try {
             studentServiceImplJpa.deleteStudent(studentId);
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/fromArrayList")
     public ResponseEntity<List<Student>> getAllStudentFromArrayList() {
-        return ResponseEntity.ok(arrayListService.getAllStudents());
+        List<Student> studentList = studentServiceImplArraylist.getAllStudents();
+        return new ResponseEntity<>(studentList, HttpStatus.OK);
     }
 
     @PostMapping("/toArrayList")
     public ResponseEntity<Integer> addStudentToArrayList(@RequestBody Student student) {
-        return new ResponseEntity<>(arrayListService.addStudent(student), HttpStatus.CREATED);
+        int studentListSize = studentServiceImplArraylist.addStudent(student);
+        return new ResponseEntity<>(studentListSize, HttpStatus.CREATED);
     }
 
     @GetMapping("/fromArrayList/sorted")
     public ResponseEntity<List<Student>> getAllStudentSortedByNameFromArrayList() {
-        return ResponseEntity.ok(arrayListService.getAllStudentSortedByName());
+        List<Student> studentList = studentServiceImplArraylist.getAllStudentSortedByName();
+        return new ResponseEntity<>(studentList, HttpStatus.OK);
     }
 }
+
+

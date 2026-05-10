@@ -3,7 +3,6 @@ package com.edutech.progressive.dto;
 import java.util.Date;
 
 public class StudentDTO {
-
     private int studentId;
     private String username;
     private String password;
@@ -12,9 +11,6 @@ public class StudentDTO {
     private String contactNumber;
     private String email;
     private String address;
-
-    public StudentDTO() {
-    }
 
     public int getStudentId() {
         return studentId;
@@ -79,4 +75,5 @@ public class StudentDTO {
     public void setAddress(String address) {
         this.address = address;
     }
+
 }

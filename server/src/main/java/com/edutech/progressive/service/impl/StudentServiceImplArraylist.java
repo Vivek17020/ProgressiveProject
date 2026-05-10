@@ -2,33 +2,49 @@ package com.edutech.progressive.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
 
 import com.edutech.progressive.entity.Student;
 import com.edutech.progressive.service.StudentService;
 
+@Service
 public class StudentServiceImplArraylist implements StudentService {
 
-    private static List<Student> studentlist = new ArrayList<>();
+    private static List<Student> studentList = new ArrayList<>();
 
     @Override
     public List<Student> getAllStudents() {
-        return studentlist;
+        return studentList;
     }
 
     @Override
     public Integer addStudent(Student student) {
-        studentlist.add(student);
-        return studentlist.size();
+        studentList.add(student);
+        return studentList.size();
     }
 
     @Override
     public List<Student> getAllStudentSortedByName() {
-        Collections.sort(studentlist);
-        return studentlist;
+        List<Student> sortedByNameList = new ArrayList<>(studentList);
+        Collections.sort(sortedByNameList);
+        return sortedByNameList;
     }
 
+    @Override
     public void emptyArrayList() {
-        studentlist = new ArrayList<>();
+        studentList.clear();
     }
+
+    public Comparator nameComparator = new Comparator<Student>() {
+
+        @Override
+        public int compare(Student s1, Student s2) {
+            return s1.getFullName().compareTo(s2.getFullName());
+        }
+
+    };
+
 }

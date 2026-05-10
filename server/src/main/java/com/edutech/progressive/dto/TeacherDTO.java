@@ -1,7 +1,6 @@
 package com.edutech.progressive.dto;
 
 public class TeacherDTO {
-
     private int teacherId;
     private String username;
     private String password;
@@ -10,9 +9,6 @@ public class TeacherDTO {
     private String email;
     private String subject;
     private Integer yearsOfExperience;
-
-    public TeacherDTO() {
-    }
 
     public int getTeacherId() {
         return teacherId;
@@ -77,4 +73,5 @@ public class TeacherDTO {
     public void setYearsOfExperience(Integer yearsOfExperience) {
         this.yearsOfExperience = yearsOfExperience;
     }
+
 }

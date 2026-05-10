@@ -1,31 +1,30 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Student } from '../../models/Student';
 
 @Component({
-  selector: 'app-studentsample',
-  standalone: true,
-  templateUrl: './studentsample.component.html',
-  styleUrls: ['./studentsample.component.scss']
+    selector: 'app-studentsample',
+    standalone: true,
+    imports: [CommonModule],
+    templateUrl: './studentsample.component.html',
+    styleUrls: ['./studentsample.component.scss']
 })
 export class StudentSampleComponent {
-  student: any;
+    student: Student;
 
-  constructor() {
-    this.student = {
-      studentld: 1,
-      fullName: 'John Doe',
-      dateOfBirth: new Date('1990-01-01'),
-      contactNumber: '1234567890',
-      email: 'john@example.com',
-      address: '123 Main Street'
-    };
-  }
+    constructor() {
 
-  logStudentAttributes(): void {
-    console.log('studentld:', this.student.studentld);
-    console.log('fullName:', this.student.fullName);
-    console.log('dateOfBirth:', this.student.dateOfBirth);
-    console.log('contactNumber:', this.student.contactNumber);
-    console.log('email:', this.student.email);
-    console.log('address:', this.student.address);
-  }
+        this.student = new Student(
+            1,
+            'John Doe',
+            new Date('1995-05-15'),
+            '9876543210',
+            'john.doe@example.com',
+            '123 Main Street, City, State'
+        );
+    }
+
+    logStudentAttributes(): void {
+        this.student.logAttributes();
+    }
 }
